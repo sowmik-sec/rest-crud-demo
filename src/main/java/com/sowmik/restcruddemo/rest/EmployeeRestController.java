@@ -4,10 +4,7 @@ import com.sowmik.restcruddemo.dao.EmployeeDAO;
 import com.sowmik.restcruddemo.entity.Employee;
 import com.sowmik.restcruddemo.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -34,5 +31,16 @@ public class EmployeeRestController {
             throw new RuntimeException("Employee id not found - " + employeeId);
         }
         return theEmployee;
+    }
+
+    // add mapping for POST /employees -add new employee
+    @PostMapping("/employees")
+    public Employee addEmployee(@RequestBody Employee theEmployee) {
+        // also just in case they pass an id in JSON ... set id to 0
+        // this is to force a save of new item ... instead of update
+
+        theEmployee.setId(0);
+        Employee dbEmployee = employeeService.save(theEmployee);
+        return dbEmployee;
     }
 }
